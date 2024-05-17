@@ -1,5 +1,3 @@
-{% extends 'base.html' %}
-
 {% block title %}Calendar{% endblock %}
 {% block header %}
 <style>
@@ -17,7 +15,7 @@
 <div class="container">
     <h1 class="text-center my-5">Calendar</h1>
     <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-header bg-primary text-white">
                     {{ year }}년 {{ month }}월
@@ -33,22 +31,25 @@
                             <div class="col day-cell text-center">금</div>
                             <div class="col day-cell text-center">토</div>
                         </div>
-                        {% for i in range(0, 6) %}
+                        {% set day = 1 - first_day %}
+                        {% for week in range(6) %}
                         <div class="row">
-                            {% for j in range(1, 8) %}
-                                {% if ((i*7+j) > first_day + 1) and ((i * 7 + j) <= (num_days + first_day + 1)) %}
-                                    <div class="col day-cell text-center">
-                                        {{ i * 7 + j - first_day - 1 }}
-                                        {% for event in events %}
-                                            {% set count_events = 0 %}
-                                            {% if event[0] == (i * 7 + j - first_day - 1) %}
-                                                <div style="font-size: 8px; text-align: left;"><span>ㆍ</span> {{ event[1] }} </div>
-                                            {% endif %}
+                            {% for weekday in range(7) %}
+                                {% if day > 0 and day <= num_days %}
+                                <div class="col day-cell text-center">
+                                    <div>{{ day }}</div>
+                                    {% if day in events %}
+                                        <ul>
+                                        {% for event in events[day] %}
+                                            <li>{{ event }}</li>
                                         {% endfor %}
-                                    </div>
+                                        </ul>
+                                    {% endif %}
+                                </div>
                                 {% else %}
-                                    <div class="col day-cell"></div>
+                                <div class="col day-cell"></div>
                                 {% endif %}
+                                {% set day = day + 1 %}
                             {% endfor %}
                         </div>
                         {% endfor %}
